@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Director - Buzón de Quejas</title>
+  <link rel="stylesheet" href="estilos/admin.css">
+</head>
+<body>
+  <header>
+
+     <img src="imagenes/logo_itsp.png" alt="Instituto Tecnológico" class="logo-item">
+    <h1> Panel del Director</h1>
+    <p>Consulta las quejas de los alumnos organizadas por carrera y semestre</p>
+  </header>
+
+
+
+  
+
+  <main>
+    <!-- Filtros -->
+    <div class="filtros">
+      <select id="filtroCarrera">
+        <option value="">Todas las carreras</option>
+      </select>
+      <select id="filtroSemestre">
+        <option value="">Todos los semestres</option>
+      </select>
+    </div>
+
+    <!-- Tabla de alumnos -->
+    <div id="tablaQuejas" class="tabla"></div>
+
+    <!-- Detalles -->
+    <div id="detalles" class="detalles"></div>
+  </main>
+
+
+  
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app-js/admin.js"></script>
+</body>
+</html>
