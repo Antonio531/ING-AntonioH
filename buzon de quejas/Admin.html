@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Director - Buzón de Quejas</title>
+  <link rel="stylesheet" href="estilos/admin.css">
+</head>
+<body>
+  <header>
+    <img src="imagenes/logo_itsp.png" alt="Instituto Tecnológico" class="logo-item">
+    <h1>Panel del Director</h1>
+    <p>Sistema Integral de Gestión de Quejas Estudiantiles</p>
+  </header>
+
+  <main>
+    <!-- Dashboard de Métricas -->
+    <section class="dashboard">
+      <h2>📊  Vista General</h2>
+      <div class="metrics-grid">
+        <div class="metric-card total">
+          <div class="metric-icon">📈</div>
+          <div class="metric-info">
+            <h3 id="totalQuejas">0</h3>
+            <p>Total Quejas</p>
+            <small id="cambioMensual">+0% este mes</small>
+          </div>
+        </div>
+
+        <div class="metric-card students">
+          <div class="metric-icon">👥</div>
+          <div class="metric-info">
+            <h3 id="totalEstudiantes">0</h3>
+            <p>Estudiantes</p>
+            <small id="estudiantesActivos">con quejas activas</small>
+          </div>
+        </div>
+
+        <div class="metric-card pending">
+          <div class="metric-icon">⏳</div>
+          <div class="metric-info">
+            <h3 id="quejasPendientes">0</h3>
+            <p>Pendientes</p>
+            <small id="tiempoPromedio">Tiempo prom: 2.5 días</small>
+          </div>
+        </div>
+
+        <div class="metric-card priority">
+          <div class="metric-icon">🚨</div>
+          <div class="metric-info">
+            <h3 id="quejasUrgentes">0</h3>
+            <p>Urgentes</p>
+            <small id="requierenAtencion">requieren atención</small>
+          </div>
+        </div>
+
+        <div class="metric-card career">
+          <div class="metric-icon">🏆</div>
+          <div class="metric-info">
+            <h3 id="carreraMasQuejas">ING. SIS.</h3>
+            <p>Más Quejas</p>
+            <small id="porcentajeCarrera">35% del total</small>
+          </div>
+        </div>
+
+        <div class="metric-card resolution">
+          <div class="metric-icon">✅</div>
+          <div class="metric-info">
+            <h3 id="tasaResolucion">85%</h3>
+            <p>Tasa Resolución</p>
+            <small id="metaMensual">Meta: 90%</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gráficos -->
+    <section class="charts-section">
+      <div class="chart-container">
+        <div class="chart-card">
+          <h3>📊 Quejas por Carrera</h3>
+          <canvas id="chartCarreras" width="400" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>📈 Tendencia Mensual</h3>
+          <canvas id="chartTendencia" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filtros Avanzados -->
+    <section class="filters-advanced">
+      <h2>🔍 Filtrar </h2>
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label>📚 Carrera</label>
+          <select id="filtroCarrera">
+            <option value="">Todas las carreras</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>📖 Semestre</label>
+          <select id="filtroSemestre">
+            <option value="">Todos los semestres</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>📅 Fecha</label>
+          <select id="filtroFecha">
+            <option value="">Todo el período</option>
+            <option value="hoy">Hoy</option>
+            <option value="semana">Esta semana</option>
+            <option value="mes">Este mes</option>
+            <option value="trimestre">Este trimestre</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>🏷️ Estado</label>
+          <select id="filtroEstado">
+            <option value="">Todos los estados</option>
+            <option value="nuevo">🔴 Nuevo</option>
+            <option value="revision">🟡 En Revisión</option>
+            <option value="respondido">🟢 Respondido</option>
+            <option value="cerrado">⚫ Cerrado</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>⭐ Prioridad</label>
+          <select id="filtroPrioridad">
+            <option value="">Todas las prioridades</option>
+            <option value="alta">🔴 Alta</option>
+            <option value="media">🟡 Media</option>
+            <option value="baja">🟢 Baja</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>🔍 Búsqueda</label>
+          <input type="text" id="busquedaTexto" placeholder="Buscar por nombre, control...">
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-filter" onclick="aplicarFiltrosBoton()">🔍 Filtrar</button>
+
+          <button class="btn-clear" onclick="limpiarFiltros()">🗑️ Limpiar</button>
+          <button class="btn-export" onclick="exportarDatos()">📊 Exportar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabla Mejorada -->
+    <section class="table-section">
+      <div class="table-header">
+        <h2>📋 Gestión de Quejas</h2>
+        <div class="table-actions">
+          <span id="resultadosCount">0 resultados</span>
+          <button class="btn-refresh" onclick="cargarQuejas()" title="Actualizar">🔄</button>
+        </div>
+      </div>
+      <div id="tablaQuejas" class="tabla"></div>
+    </section>
+
+    <!-- Modal de Detalles Mejorado -->
+    <div id="detalles" class="detalles-modal"></div>
+
+    <!-- Modal de Templates -->
+    <div id="templatesModal" class="templates-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>📧 Templates de Respuesta</h3>
+          <button class="btn-close" onclick="cerrarTemplates()">×</button>
+        </div>
+        <div class="templates-grid">
+          <div class="template-item" onclick="usarTemplate('agradecimiento')">
+            <h4>✅ Agradecimiento</h4>
+            <p>Para agradecer y confirmar recepción</p>
+          </div>
+          <div class="template-item" onclick="usarTemplate('investigacion')">
+            <h4>🔍 En Investigación</h4>
+            <p>Cuando se está investigando el caso</p>
+          </div>
+          <div class="template-item" onclick="usarTemplate('solucion')">
+            <h4>🎯 Solución Propuesta</h4>
+            <p>Para proponer una solución</p>
+          </div>
+          <div class="template-item" onclick="usarTemplate('derivacion')">
+            <h4>↗️ Derivación</h4>
+            <p>Para derivar a otra área</p>
+          </div>
+          <div class="template-item" onclick="usarTemplate('seguimiento')">
+            <h4>📋 Seguimiento</h4>
+            <p>Para dar seguimiento al caso</p>
+          </div>
+          <div class="template-item" onclick="usarTemplate('cierre')">
+            <h4>✅ Cierre de Caso</h4>
+            <p>Para cerrar la queja resuelta</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Container para Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="app-js/admin.js"></script>
+</body>
+</html>
